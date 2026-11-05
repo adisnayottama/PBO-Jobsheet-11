@@ -1,9 +1,13 @@
 package id.ac.polinema;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Account {
     private String accountNumber;
     private Customer owner;
     private double balance;
+    private List<Transaction> history = new ArrayList<>();
 
     public Account(String accountNumber, Customer owner, double balance) {
         this.accountNumber = accountNumber;
@@ -23,11 +27,16 @@ public abstract class Account {
         return balance;
     }
 
+    public List<Transaction> getHistory() { // Getter untuk history
+        return history;
+    }
+
     public boolean deposit(double amount) {
         if (amount <= 0) {
             return false;
         }
         balance += amount;
+        history.add(new Transaction(TransactionType.DEPOSIT, amount)); // Dicatat saat deposit sukses
         return true;
     }
 
@@ -45,6 +54,7 @@ public abstract class Account {
                     accountNumber + ": insufficient balance for a withdrawal of " + amount);
         }
         balance -= amount;
+        history.add(new Transaction(TransactionType.WITHDRAW, amount)); // Dicatat saat withdraw sukses
     }
 
     protected boolean canWithdraw(double amount) {
